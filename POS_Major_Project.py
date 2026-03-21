@@ -5,6 +5,9 @@ pay_made = float(0)
 discount = float(0)
 GCT = float(0.15)
 choice = int(0)
+cart =[]
+
+
 
 store_items=[
     {"name":"Apple", "quantity":50, "price": 150},
@@ -22,9 +25,6 @@ store_items=[
 
 def main():
   os.system('cls')
-  print("Welcome to Best Buy Retail Store POS")
-  print("-----------------------------------------")
-  print("")
   menu_options()
   
 
@@ -33,13 +33,19 @@ def prod_list():
   for item in store_items:
     print(f"{item['name']:<25} {item['quantity']:<10} ${item['price']:<10}")
 
+
 def choice_validation(choice_made):
-  if choice_made <1 or choice_made>4:
+  if choice_made <1 or choice_made >4:
     os.system('cls')
     print("The option you select can only be from 1-4 please try again")
     menu_options()
+    return 0
+
 
 def menu_options():
+  print("Welcome to Best Buy Retail Store POS")
+  print("-----------------------------------------")
+  print("")
   print("Please select an option below")
   print("1. Add item to cart")
   print("2. Remove item from cart")
@@ -47,9 +53,29 @@ def menu_options():
   print("4. Close Program")
   choice = int(input("Enter your choice by number here: " ))
   choice_validation(choice)
+  choices(choice)
   
+
+def choices(choice_selected):
+  match choice_selected:
+    case 1:
+      add_to_cart()
+
   
-def choice1():
-  prod_list()
+def add_to_cart():
+  item_name =""
+  while item_name !="0":
+    prod_list()
+    print("--------------------------------")
+    print("Enter 0 to return to main menu")
+    item_name = input("Enter the name of the product you wish to add to cart: ")
+    if item_name == "0":
+      os.system('cls')
+      menu_options()
+    else:
+      quantity = input("Enter the quantity: ")
+      for item in store_items:
+        if item["name"] == item_name:
+          print(item_name)
 
 main()
