@@ -8,7 +8,6 @@ choice = int(0)
 cart =[]
 
 
-
 store_items=[
     {"name":"Apple", "quantity":50, "price": 150},
     {"name":"Snickers", "quantity":100, "price": 450},
@@ -65,6 +64,8 @@ def choices(choice_selected):
 def add_to_cart():
   item_name =""
   while item_name !="0":
+    item_found = False
+    cart_found = False
     prod_list()
     print("--------------------------------")
     print("Enter 0 to return to main menu")
@@ -73,9 +74,33 @@ def add_to_cart():
       os.system('cls')
       menu_options()
     else:
-      quantity = input("Enter the quantity: ")
       for item in store_items:
-        if item["name"] == item_name:
-          print(item_name)
+        if item["name"].lower() == item_name.lower():
+          item_found = True
+          quantity = int(input("Enter the quantity: "))
+          while item["quantity"] < quantity:
+            os.system('cls')
+            print("Currently we do not have enough items in stock please try again")
+            quantity = int(input("Enter the quantity: "))
+          item["quantity"] = item["quantity"] - quantity
+          for cart_item in cart:
+            if cart_item["name"].lower() == item_name.lower():
+              cart_found = True
+              cart_item["quantity"] += quantity
+              item["quantity"] -= quantity
+              break
+          if cart_found == False:
+            cart.append({"name":item["name"], "quantity":quantity, "price": item["price"]})
+            item["quantity"] -= quantity
+          print(cart)
+          input("Enter Enter Key to continue..... .....")
+          break
+      if item_found == False:
+        print("Item is not in our stocks please try again")
+        input('Press Enter Key to continue..... ')
+        os.system('cls')
+        add_to_cart()
+  menu_options()
+
 
 main()
