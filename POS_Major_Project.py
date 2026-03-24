@@ -55,6 +55,7 @@ def menu_options():
   choices(choice)
   
 
+
 def choices(choice_selected):
   match choice_selected:
     case 1:
@@ -102,5 +103,32 @@ def add_to_cart():
         add_to_cart()
   menu_options()
 
+def choices(choice_selected):
+  match choice_selected:
+    case 2:
+      remove_from_cart()
+
+def remove_from_cart():x
+  item_name = input("Enter item name to remove: ")
+  
+  for item in cart:
+    if item["name"].lower() == item_name.lower():
+      quantity = int(input("Enter quantity to remove: "))
+      
+      if quantity >= item["quantity"]:
+        cart.remove(item)
+      else:
+        item["quantity"] -= quantity
+      
+      print("Item updated/removed from cart.")
+      input("Press Enter to continue...")
+      os.system('cls')
+      menu_options()
+      return
+
+  print("Item not found in cart.")
+  input("Press Enter to continue...")
+  os.system('cls')
+  menu_options()    
 
 main()
