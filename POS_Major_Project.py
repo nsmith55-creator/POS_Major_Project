@@ -19,7 +19,7 @@ store_items=[
     {"name":"Popcorn", "quantity":33, "price": 100},
     {"name":"Chocolate Ice Cream", "quantity":300, "price": 750},
     {"name":"Sliced Cheese", "quantity":90, "price": 320},
-    {"name":"Cinamon Role", "quantity":100, "price": 80},
+    {"name":"Cinnamon Roll", "quantity":100, "price": 80},
 ]
 
 def main():
