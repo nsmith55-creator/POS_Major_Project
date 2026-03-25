@@ -23,17 +23,18 @@ store_items=[
     {"name":"Cinnamon Roll", "quantity":100, "price": 80},
 ]
 
+
 def main():
   os.system('cls')
   menu_options()
   
 
 def prod_list():
-  print(f"{'Product':<25} {'Quantity':<10} {'Price':<10}")
+  print(f"{'Product':<25} {'Quantity':<10} {'Price':<10}") # this line is the header of the product list page that gives an additional spacing for appropriate alignment
   for item in store_items:
     print(f"{item['name']:<25} {item['quantity']:<10} ${item['price']:<10}")
 
-
+# validation to ensure that the user does not select a number that is not on the listed menu options
 def choice_validation(choice_made):
   if choice_made <1 or choice_made >5:
     os.system('cls')
@@ -41,14 +42,16 @@ def choice_validation(choice_made):
     menu_options()
     return 0
 
+
 def check_stock():
   for item in store_items:
     if item['quantity'] <= 5:
       print(f"{item['name']} is low on stock {item['quantity']} remaining please request more")
 
-def menu_options():
 
-  print(total)
+# this function allows for the menu options to be displayed to teh user
+def menu_options():
+  cart =[]
   print("Welcome to Best Buy Retail Store POS")
   check_stock()
   print("-----------------------------------------")
@@ -57,22 +60,32 @@ def menu_options():
   print("1. Add item to cart")
   print("2. Remove item from cart")
   print("3. View Cart")
-  print("4. Close Program")
-  choice = int(input("Enter your choice by number here: " ))
+  print("4. Checkout")
+  print("5. Close Program")
+  # this while loop holds a try that allows for error handling while simultainiously allows for the user to make another attempt at entry
+  while True:
+    try:
+      choice = int(input("Enter your choice by number here: " ))
+      break
+    except ValueError:
+      print("Only integers are allowed please try again")
   choice_validation(choice)
   choices(choice)
   
 
-
+# This function handles the users choice based on the menu page
 def choices(choice_selected):
   match choice_selected:
     case 1:
       add_to_cart()
     case 2:
       remove_from_cart()
-    case 5:
+    case 4:
       checkout()
+    case 5:
+     goodbye()
   
+
 def add_to_cart():
   item_name = ""
   while item_name !="0":
@@ -83,17 +96,27 @@ def add_to_cart():
     print("Enter 0 to return to main menu")
     item_name = input("Enter the name of the product you wish to add to cart: ")
     if item_name == "0":
-      os.system('cls')
+      os.system('cls') #This ine makes it so the terminal display shows only the new printed values to enure it is clean
       menu_options()
     else:
-      for item in store_items:
+      for item in store_items: # a loop to read the dictioary list items
         if item["name"].lower() == item_name.lower():
           item_found = True
-          quantity = int(input("Enter the quantity: "))
+          while True:
+            try:
+              quantity = int(input("Enter the quantity: "))
+              break
+            except ValueError:
+              print("Only numbers are accepted please try again")
           while item["quantity"] < quantity:
             os.system('cls')
             print(f"Currently we only have {item['quantity']} items in stock please try again")
-            quantity = int(input("Enter the quantity: "))
+            while True:
+              try:
+                quantity = int(input("Enter the quantity: "))
+                break
+              except ValueError:
+                print("Only numbers are accepted please try again")
           for cart_item in cart:
             if cart_item["name"].lower() == item_name.lower():
               cart_found = True
@@ -102,7 +125,7 @@ def add_to_cart():
               break
           if cart_found == False:
             cart.append({"name":item["name"], "quantity":quantity, "price": item["price"]})
-            item["quantity"] = item["quantity"] - quantity
+            item["quantity"] -= - quantity
           input("Press Enter Key to continue..... ")
           break
       if item_found == False:
@@ -118,8 +141,13 @@ def remove_from_cart():
   
   for item in cart:
     if item["name"].lower() == item_name.lower():
-      quantity = int(input("Enter quantity to remove: "))
-      
+      while True:
+        try:
+          quantity = int(input("Enter quantity to remove: "))
+          break
+        except ValueError:
+          print("Quantity can only be a number, please try again")
+  
       if quantity >= item["quantity"]:
         cart.remove(item)
       else:
@@ -150,30 +178,68 @@ def calc_total(sub):
 
 
 def checkout():
+  change = float(0)
+  pay = float(0)
+  item_total = float(0)
+  subtotal = calc_subtotal()
+  total = calc_total(subtotal)
+  tax = subtotal * 0.10
+  os.system('cls')
+  if cart == []:
+    print("There are no items currently in the cart")
+    input("Press Enter to return to main menu")
+    main()
+  print(f"{'Item':<13} {'Quantity':<13} {'Unit Price':<13} {'Item Total'}")
   for item in cart:
-    print(f"{item['name']:<13} {item['quantity']:<13} {item['price']}")
-    subtotal = calc_subtotal()
-    total = calc_total(subtotal)
-    tax = subtotal * 0.10
-    print(f"{'Subtotal:':<13}" , subtotal)
-    print(f"{'Tax (10%):':<13}", tax)
-    print(f"{'Total:':<13}", total)
-    input("")
-    payment(total)
+    item_total = item['quantity'] * item['price']
+    print(f"{item['name']:<13} {item['quantity']:<13} {item['price']:<13} {item_total}")
+  print(f"{'Subtotal:':<39}" , subtotal)
+  print(f"{'Tax (10%):':<39}", tax)
+  print(f"{'Total:':<39}", total)
+  pay = payment(total)
+  change = pay - total
+  os.system('cls')
+  print("---------------------------------------------------------------")
+  print(f"{'Best Buy Retail Store':<13}")
+  print("---------------------------------------------------------------")
+  print(f"{'Item':<13} {'Quantity':<13} {'Unit Price':<13} {'Item Total'}")
+  for item in cart:
+    item_total = item['quantity'] * item['price']
+    print(f"{item['name']:<13} {item['quantity']:<13} {item['price']:<13} {item_total}")
+  print(f"{'Subtotal:':<39}" , subtotal)
+  print(f"{'Tax (10%):':<39}", tax)
+  print(f"{'Total:':<39}", total)
+  print(f"{'Payment:':<39}")
+  print(f"{'Change:':<39}", change)
+  print("---------------------------------------------------------------")
+  print("Thank you for making it Best Buy Retail Store")
+  print("---------------------------------------------------------------")
+  input("Press enter to return to main menu")
+  cart.clear()
+  menu_options()
+
 
 def payment(total):
   payment = float(0)
-  change = float(0)
-  input('Enter the amount paid: ', payment)
+  while True:
+    try: 
+      payment = int(input('Enter the amount paid: ' ))
+      break
+    except ValueError:
+      print("Payment can only be a number, please try again")
   while payment < total:
     print('The amount entered is less than the total value please try entering a value at the same amount or greater')
-    input('Enter the amount paid: ', payment)
-  change = payment - total
-  print("Your change is:", change)
+    while True:
+      try: 
+        payment = int(input('Enter the amount paid: ' ))
+        break
+      except ValueError:
+        print("Payment can only be a number, please try again")
+  return payment
 
-   
 
+def goodbye():
+  print("Thank you for Using Best Buy Retail Store POS")
+  return 0
 
 main()
-
-
