@@ -53,6 +53,7 @@ def check_stock():
 def menu_options():
   cart =[]
   print("Welcome to Best Buy Retail Store POS")
+  print("-----------------------------------------")
   check_stock()
   print("-----------------------------------------")
   print("")
@@ -87,10 +88,12 @@ def choices(choice_selected):
   
 
 def add_to_cart():
+  os.system('cls')
   item_name = ""
   while item_name !="0":
     item_found = False
     cart_found = False
+    check_stock()
     prod_list()
     print("--------------------------------")
     print("Enter 0 to return to main menu")
@@ -122,11 +125,13 @@ def add_to_cart():
               cart_found = True
               cart_item["quantity"] += quantity
               item["quantity"] -= quantity
+              os.system('cls')
               break
           if cart_found == False:
             cart.append({"name":item["name"], "quantity":quantity, "price": item["price"]})
-            item["quantity"] -= - quantity
+            item["quantity"] -= quantity
           input("Press Enter Key to continue..... ")
+          os.system('cls')
           break
       if item_found == False:
         print("Item is not in our stocks please try again")
@@ -171,19 +176,20 @@ def calc_subtotal():
   return subtotal
   
 
-def calc_total(sub):
-  total = 0
-  total = sub + (sub * 0.10)
-  return total
-
-
 def checkout():
   change = float(0)
   pay = float(0)
   item_total = float(0)
   subtotal = calc_subtotal()
-  total = calc_total(subtotal)
-  tax = subtotal * 0.10
+  discount = float(0.12)
+  discounted_price = subtotal * discount
+  if subtotal > 5000:
+    total = subtotal - discounted_price # total is used to hold the cost after teh discount
+    tax = total * 0.10
+    final_total = total + tax #final_total stores the cost after tax is applied
+  else:
+    tax = subtotal * 0.10
+    final_total = subtotal+tax
   os.system('cls')
   if cart == []:
     print("There are no items currently in the cart")
@@ -192,12 +198,16 @@ def checkout():
   print(f"{'Item':<13} {'Quantity':<13} {'Unit Price':<13} {'Item Total'}")
   for item in cart:
     item_total = item['quantity'] * item['price']
-    print(f"{item['name']:<13} {item['quantity']:<13} {item['price']:<13} {item_total}")
-  print(f"{'Subtotal:':<39}" , subtotal)
-  print(f"{'Tax (10%):':<39}", tax)
-  print(f"{'Total:':<39}", total)
-  pay = payment(total)
-  change = pay - total
+    print(f"{item['name']:<13} {item['quantity']:<13} ${item['price']:<13}${item_total}")
+  print(f"{'Subtotal:':<41}" ,"$",subtotal)
+  if subtotal > 5000:
+    print(f"{'Discount(%):':<41}", discount*100,"%")
+    print(f"{'Discounte($):':<41}","$",discounted_price)
+    print(f"{'Discounted Price:':<41}","$",total)
+  print(f"{'Tax (10%):':<41}","$",tax)
+  print(f"{'Total:':<41}","$",final_total)
+  pay = payment(final_total)
+  change = pay - final_total
   os.system('cls')
   print("---------------------------------------------------------------")
   print(f"{'Best Buy Retail Store':<13}")
@@ -205,12 +215,16 @@ def checkout():
   print(f"{'Item':<13} {'Quantity':<13} {'Unit Price':<13} {'Item Total'}")
   for item in cart:
     item_total = item['quantity'] * item['price']
-    print(f"{item['name']:<13} {item['quantity']:<13} {item['price']:<13} {item_total}")
-  print(f"{'Subtotal:':<39}" , subtotal)
-  print(f"{'Tax (10%):':<39}", tax)
-  print(f"{'Total:':<39}", total)
-  print(f"{'Payment:':<39}")
-  print(f"{'Change:':<39}", change)
+    print(f"{item['name']:<13} {item['quantity']:<13} ${item['price']:<13}${item_total}")
+  print(f"{'Subtotal:':<41}" ,"$",subtotal)
+  if subtotal > 5000:
+    print(f"{'Discount(%):':<41}", discount*100,"%")
+    print(f"{'Discounte($):':<41}","$",discounted_price)
+    print(f"{'Discounted Price:':<41}","$",total)
+  print(f"{'Tax (10%):':<41}","$",tax)
+  print(f"{'Total:':<41}","$",final_total)
+  print(f"{'Payment:':<41}","$",pay)
+  print(f"{'Change:':<41}","$",change)
   print("---------------------------------------------------------------")
   print("Thank you for making it Best Buy Retail Store")
   print("---------------------------------------------------------------")
