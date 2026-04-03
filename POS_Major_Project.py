@@ -51,7 +51,6 @@ def check_stock():
 
 # this function allows for the menu options to be displayed to teh user
 def menu_options():
-  cart =[]
   print("Welcome to Best Buy Retail Store POS")
   print("-----------------------------------------")
   check_stock()
@@ -81,11 +80,47 @@ def choices(choice_selected):
       add_to_cart()
     case 2:
       remove_from_cart()
+    case 3:
+      view_cart()
     case 4:
       checkout()
     case 5:
      goodbye()
   
+
+def cart_display():
+  os.system('cls')
+  print(f"{'Item':<13} {'Quantity':<13} {'Unit Price':<13} {'Item Total'}")
+  for item in cart:
+    item_total = item['quantity'] * item['price']
+    print(f"{item['name']:<13} {item['quantity']:<13} ${item['price']:<13}${item_total}")
+  
+  
+  
+
+def view_cart():
+  print("---------------------------------------------------------------")
+  print(f"{'Best Buy Retail Store':<13}")
+  print("---------------------------------------------------------------")
+  print(f"{'Your Cart':<13}")
+  if cart == []:
+    print("You have no items currenlt in cart")
+    input("Press enter to return to main menu ")
+    main()
+  else:
+    cart_display()
+    while True:
+      try:
+        cart_choice=int(input("Enter 0 to return to main menu or 1 to check out "))
+        break
+      except ValueError:
+          print("Only numbers are accepted please try again")
+    match cart_choice:
+      case 0:
+        main()
+      case 1:
+        checkout()
+
 
 def add_to_cart():
   os.system('cls')
@@ -138,6 +173,8 @@ def add_to_cart():
         input('Press Enter Key to continue..... ')
         os.system('cls')
         add_to_cart()
+
+
 
 
 
@@ -195,10 +232,7 @@ def checkout():
     print("There are no items currently in the cart")
     input("Press Enter to return to main menu")
     main()
-  print(f"{'Item':<13} {'Quantity':<13} {'Unit Price':<13} {'Item Total'}")
-  for item in cart:
-    item_total = item['quantity'] * item['price']
-    print(f"{item['name']:<13} {item['quantity']:<13} ${item['price']:<13}${item_total}")
+  cart_display()
   print(f"{'Subtotal:':<41}" ,"$",subtotal)
   if subtotal > 5000:
     print(f"{'Discount(%):':<41}", discount*100,"%")
@@ -213,10 +247,7 @@ def checkout():
   print(f"{'Best Buy Retail Store':<13}")
   print("---------------------------------------------------------------")
   print(f"{'Item':<13} {'Quantity':<13} {'Unit Price':<13} {'Item Total'}")
-  for item in cart:
-    item_total = item['quantity'] * item['price']
-    print(f"{item['name']:<13} {item['quantity']:<13} ${item['price']:<13}${item_total}")
-  print(f"{'Subtotal:':<41}" ,"$",subtotal)
+  cart_display()
   if subtotal > 5000:
     print(f"{'Discount(%):':<41}", discount*100,"%")
     print(f"{'Discounte($):':<41}","$",discounted_price)
